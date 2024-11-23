@@ -1,28 +1,28 @@
 #content {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 #sidebar {
-    width: 10%;
-    height: 100vh;
-    padding: 10px;
-    border: 1px solid #000;
+  width: 10%;
+  height: 100vh;
+  padding: 10px;
+  border: 1px solid #000;
 }
 
 #toDoList {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .toDoListItem {
-    padding: 10px;
-    width: 50%;
-    border: 1px solid #000;
-    border-radius: 5px;
+  padding: 10px;
+  width: 50%;
+  border: 1px solid #000;
+  border-radius: 5px;
 }
 
 .addBtn {
-    align-self: flex-end;
+  align-self: flex-end;
 }
