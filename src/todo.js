@@ -6,6 +6,7 @@ export class ToDo {
     this.dueDate = dueDate;
     this.priority = priority;
     this.notes = notes;
+    this.checked = checked;
   }
 
   getTitle() {

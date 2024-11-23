@@ -5,16 +5,20 @@ import {
   createDefaultTodo,
 } from "./todo";
 import "./styles.css";
+import lessthan from "./assets/lessthan.svg";
+import burger from "./assets/burger.svg";
 
 // Render the ToDoList object and save it to session storage
 function renderToDoList(index) {
   // Save the ToDoList to session storage
   const toDoListsJSON = JSON.stringify(toDoLists);
-  sessionStorage.setItem("toDoLists", toDoListsJSON);
+  localStorage.setItem("toDoLists", toDoListsJSON);
 
   const toDoListElement = document.getElementById("toDoList");
   toDoListElement.innerHTML = ""; // Clear the list
 
+  const addElement = document.getElementById("add");
+  addElement.innerHTML = ""; // Clear the add button
   const addBtn = document.createElement("button");
   addBtn.textContent = "Add ToDo";
   addBtn.addEventListener("click", () => {
@@ -22,51 +26,50 @@ function renderToDoList(index) {
     renderToDoList(index);
   });
   addBtn.className = "addBtn";
-  toDoListElement.appendChild(addBtn);
+  addElement.appendChild(addBtn);
 
   toDoLists[index].getToDoList().forEach((toDo, index2) => {
     const toDoElement = document.createElement("div");
     toDoElement.className = "toDoListItem";
 
-    const titleElement = document.createElement("h2");
-    titleElement.textContent = toDo.getTitle();
-    toDoElement.appendChild(titleElement);
-
-    const dueDateElement = document.createElement("p");
-    dueDateElement.textContent = `Due Date: ${toDo.getDueDate()}`;
-    toDoElement.appendChild(dueDateElement);
-
-    const priorityElement = document.createElement("p");
-    priorityElement.textContent = `Priority: ${toDo.getPriority()}`;
-    toDoElement.appendChild(priorityElement);
-
-    const notesElement = document.createElement("p");
-    notesElement.textContent = `Notes: ${toDo.getNotes()}`;
-    toDoElement.appendChild(notesElement);
-
-    const checkboxElement = document.createElement("input");
-    checkboxElement.type = "checkbox";
-    checkboxElement.id = `toDo${index}`;
-    checkboxElement.checked = toDo.getChecked();
-    checkboxElement.addEventListener("change", () => {
+    const radioElement = document.createElement("input");
+    radioElement.type = "radio";
+    radioElement.checked = toDo.getChecked();
+    radioElement.addEventListener("change", () => {
       toDo.setChecked(!toDo.getChecked());
       renderToDoList(index);
     });
-    toDoElement.appendChild(checkboxElement);
+    radioElement.className = "checked";
+    toDoElement.appendChild(radioElement);
 
-    const labelElement = document.createElement("label");
-    labelElement.htmlFor = `toDo${index}`;
-    labelElement.textContent = "Completed";
-    toDoElement.appendChild(labelElement);
+    const titleElement = document.createElement("h2");
+    titleElement.textContent = toDo.getTitle();
+    titleElement.className = "title";
+    toDoElement.appendChild(titleElement);
+
+    const dueDateElement = document.createElement("p");
+    dueDateElement.textContent = `${toDo.getDueDate()}`;
+    dueDateElement.className = "duedate";
+    toDoElement.appendChild(dueDateElement);
+
+    const priorityElement = document.createElement("p");
+    priorityElement.textContent = `${toDo.getPriority()}`;
+    priorityElement.className = "priority";
+    toDoElement.appendChild(priorityElement);
 
     const removeButtonElement = document.createElement("button");
-    removeButtonElement.id = `removeToDo${index}`;
     removeButtonElement.textContent = "Remove";
     removeButtonElement.addEventListener("click", () => {
       toDoLists[index].removeToDo(index2);
       renderToDoList(index);
     });
+    removeButtonElement.className = "removetodo";
     toDoElement.appendChild(removeButtonElement);
+
+    const notesElement = document.createElement("p");
+    notesElement.textContent = `${toDo.getNotes()}`;
+    notesElement.className = "notes";
+    toDoElement.appendChild(notesElement);
 
     toDoListElement.appendChild(toDoElement);
   });
@@ -74,7 +77,7 @@ function renderToDoList(index) {
 
 // Check session storage for existing ToDoLists
 const toDoLists = [];
-const storedToDoLists = JSON.parse(sessionStorage.getItem("toDoLists"));
+const storedToDoLists = JSON.parse(localStorage.getItem("toDoLists"));
 if (storedToDoLists) {
   storedToDoLists.forEach((toDoList) => {
     const newToDoList = new ToDoList(toDoList.name);
@@ -104,12 +107,38 @@ toDoLists[1].setName("To Do List 2");
 // render sidebar
 toDoLists.forEach((toDoList, index) => {
   const sideBar = document.getElementById("sidebar");
-  const sideBarItem = document.createElement("div");
+  const sideBarItem = document.createElement("h2");
   sideBarItem.textContent = toDoList.getName();
+  sideBarItem.className = "listname";
   sideBarItem.addEventListener("click", () => {
+    const lists = document.querySelectorAll(".listname");
+    lists.forEach((list) => {
+      list.classList.remove("selected");
+    });
+    sideBarItem.classList.add("selected");
     renderToDoList(index);
   });
   sideBar.appendChild(sideBarItem);
 });
+
+const lessthenBtn = document.createElement("img");
+lessthenBtn.src = lessthan;
+lessthenBtn.id = "lessthan";
+lessthenBtn.addEventListener("click", () => {
+  const sideBar = document.getElementById("sidebar");
+  sideBar.classList.toggle("hidden");
+  toggleImg();
+});
+const header = document.getElementById("header");
+header.appendChild(lessthenBtn);
+
+function toggleImg() {
+  const img = document.getElementById("lessthan");
+  if (img.src === lessthan) {
+    img.src = burger;
+  } else {
+    img.src = lessthan;
+  }
+}
 
 renderToDoList(0);
