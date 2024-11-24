@@ -3,10 +3,10 @@ import {
   ToDoList,
   createDefaultToDoList,
   createDefaultTodo,
-} from "./todo";
-import "./styles.css";
-import lessthan from "./assets/lessthan.svg";
-import burger from "./assets/burger.svg";
+} from "../models/todo";
+import "../styles.css";
+import lessthan from "../assets/lessthan.svg";
+import burger from "../assets/burger.svg";
 
 // Render the ToDoList object and save it to session storage
 function renderToDoList(index) {
@@ -32,15 +32,15 @@ function renderToDoList(index) {
     const toDoElement = document.createElement("div");
     toDoElement.className = "toDoListItem";
 
-    const radioElement = document.createElement("input");
-    radioElement.type = "radio";
-    radioElement.checked = toDo.getChecked();
-    radioElement.addEventListener("change", () => {
+    const checkboxElement = document.createElement("input");
+    checkboxElement.type = "checkbox";
+    checkboxElement.checked = toDo.getChecked();
+    checkboxElement.addEventListener("change", () => {
       toDo.setChecked(!toDo.getChecked());
       renderToDoList(index);
     });
-    radioElement.className = "checked";
-    toDoElement.appendChild(radioElement);
+    checkboxElement.className = "checked";
+    toDoElement.appendChild(checkboxElement);
 
     const titleElement = document.createElement("h2");
     titleElement.textContent = toDo.getTitle();
@@ -105,11 +105,18 @@ toDoLists[0].setName("To Do List 1");
 toDoLists[1].setName("To Do List 2");
 
 // render sidebar
+const sideBar = document.getElementById("sidebar");
+const appTitle = document.createElement("h1");
+appTitle.textContent = "To Do List";
+appTitle.id = "apptitle";
+sideBar.appendChild(appTitle);
 toDoLists.forEach((toDoList, index) => {
-  const sideBar = document.getElementById("sidebar");
   const sideBarItem = document.createElement("h2");
   sideBarItem.textContent = toDoList.getName();
   sideBarItem.className = "listname";
+  if (index == 0) {
+    sideBarItem.classList.add("selected");
+  }
   sideBarItem.addEventListener("click", () => {
     const lists = document.querySelectorAll(".listname");
     lists.forEach((list) => {
@@ -121,6 +128,7 @@ toDoLists.forEach((toDoList, index) => {
   sideBar.appendChild(sideBarItem);
 });
 
+// render header
 const lessthenBtn = document.createElement("img");
 lessthenBtn.src = lessthan;
 lessthenBtn.id = "lessthan";

@@ -4,8 +4,21 @@ body {
 
 #container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100vh;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+#list {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-y: auto;
 }
 
 #header {
@@ -15,14 +28,8 @@ body {
 }
 
 #lessthan {
-  padding: 20px;
-  max-height: 50%;
-  max-width: 50%;
-}
-
-#content {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   height: 100%;
 }
 
@@ -37,6 +44,18 @@ body {
 
 #sidebar.hidden {
   width: 0;
+}
+
+#sidebar.hidden > h2.listname.selected {
+  padding: 0;
+}
+
+#apptitle {
+  height: 7%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .listname {
@@ -63,7 +82,7 @@ body {
 }
 
 .toDoListItem {
-  height: 7%;
+  height: 100px;
   padding: 10px;
   width: 90%;
   border-bottom: 1px solid #000;
