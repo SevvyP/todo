@@ -6,6 +6,8 @@ import {
 } from "../models/todo";
 import lessthan from "../../assets/lessthan.svg";
 import burger from "../../assets/burger.svg";
+import edit from "../../assets/edit.svg";
+import calendar from "../../assets/calendar.svg";
 
 export class ToDoListsView {
   constructor() {
@@ -58,9 +60,14 @@ export class ToDoListsView {
       titleElement.className = "title";
       toDoElement.appendChild(titleElement);
 
-      const dueDateElement = document.createElement("p");
-      dueDateElement.textContent = `${toDo.getDueDate()}`;
+      const dueDateElement = document.createElement("div");
+      const dueDateText = document.createElement("p");
+      dueDateText.textContent = `${toDo.getDueDate()}`;
       dueDateElement.className = "duedate";
+      const dueDateImg = document.createElement("img");
+      dueDateImg.src = calendar;
+      dueDateElement.appendChild(dueDateImg);
+      dueDateElement.appendChild(dueDateText);
       toDoElement.appendChild(dueDateElement);
 
       const priorityElement = document.createElement("p");
@@ -68,15 +75,34 @@ export class ToDoListsView {
       priorityElement.className = "priority";
       toDoElement.appendChild(priorityElement);
 
-      const removeButtonElement = document.createElement("button");
-      removeButtonElement.textContent = "Remove";
-      removeButtonElement.addEventListener("click", () => {
-        this.toDoLists[index].removeToDo(index2);
+      //   const removeButtonElement = document.createElement("button");
+      //   removeButtonElement.textContent = "Remove";
+      //   removeButtonElement.addEventListener("click", () => {
+      //     this.toDoLists[index].removeToDo(index2);
+      //     saveToDoListsToStorage(this.toDoLists);
+      //     this._renderList(index);
+      //   });
+      //   removeButtonElement.className = "removetodo";
+      //   toDoElement.appendChild(removeButtonElement);
+
+      const editImg = document.createElement("img");
+      editImg.src = edit;
+      editImg.className = "edit";
+      editImg.addEventListener("click", () => {
+        const title = prompt("Title", toDo.getTitle());
+        const description = prompt("Description", toDo.getDescription());
+        const dueDate = prompt("Due Date", toDo.getDueDate());
+        const priority = prompt("Priority", toDo.getPriority());
+        const notes = prompt("Notes", toDo.getNotes());
+        toDo.setTitle(title);
+        toDo.setDescription(description);
+        toDo.setDueDate(dueDate);
+        toDo.setPriority(priority);
+        toDo.setNotes(notes);
         saveToDoListsToStorage(this.toDoLists);
         this._renderList(index);
       });
-      removeButtonElement.className = "removetodo";
-      toDoElement.appendChild(removeButtonElement);
+      toDoElement.appendChild(editImg);
 
       const notesElement = document.createElement("p");
       notesElement.textContent = `${toDo.getNotes()}`;
