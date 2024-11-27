@@ -24,13 +24,19 @@ body {
 #header {
   height: 7%;
   background-color: #94b9ff;
-  color: white;
+  display: flex;
+  align-items: flex-start;
 }
 
-#lessthan {
+#imgDiv {
   display: flex;
   align-items: center;
   height: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+#lessthan {
+  max-height: 80%;
 }
 
 #sidebar {
@@ -115,3 +121,16 @@ body {
 #add {
   margin-right: 20px;
 }
+
+/* responsive sidebar code when screen is 900px wide
+@media screen and (max-width: 900px) {
+  #sidebar {
+    width: 0;
+  }
+  #sidebar.hidden {
+    width: 0;
+  }
+  #sidebar.hidden > h2.listname.selected {
+    padding: 0;
+  }
+} */
