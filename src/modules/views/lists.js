@@ -6,6 +6,7 @@ import {
 } from "../models/todo";
 import lessthan from "../../assets/lessthan.svg";
 import burger from "../../assets/burger.svg";
+import edit from "../../assets/edit.svg";
 import expand from "../../assets/expand.svg";
 import calendar from "../../assets/calendar.svg";
 
@@ -18,17 +19,44 @@ export default class ToDoListsView {
     this.sidebar = document.getElementById("sidebar");
     this.content = document.getElementById("content");
     this.header = document.getElementById("header");
+    this.title = document.getElementById("title");
     this.list = document.getElementById("list");
     this.toDoList = document.getElementById("toDoList");
     this.add = document.getElementById("add");
     this._renderList(0);
-    this._renderSidebar();
+    this._renderSidebar(0);
     this._renderHeader();
   }
 
   _renderList(index) {
     this.toDoList.innerHTML = ""; // Clear the list
     this.add.innerHTML = ""; // Clear the add button
+    this.title.innerHTML = ""; // Clear the title
+
+    const listTitle = document.createElement("h1");
+    listTitle.textContent = this.toDoLists[index].getName();
+    listTitle.contentEditable = true;
+    listTitle.spellcheck = false;
+    listTitle.addEventListener("input", () => {
+      if (listTitle.textContent === "") {
+        listTitle.textContent = "List Title";
+      }
+      this.toDoLists[index].setName(listTitle.textContent);
+      saveToDoListsToStorage(this.toDoLists);
+      this._renderSidebar(index);
+    });
+    this.title.appendChild(listTitle);
+
+    const removeListBtn = document.createElement("button");
+    removeListBtn.textContent = "Remove List";
+    removeListBtn.className = "removeListBtn";
+    removeListBtn.addEventListener("click", () => {
+      this.toDoLists.splice(index, 1);
+      saveToDoListsToStorage(this.toDoLists);
+      this._renderSidebar(0);
+      this._renderList(0);
+    });
+    this.title.appendChild(removeListBtn);
 
     const addBtn = document.createElement("button");
     addBtn.textContent = "Add ToDo";
@@ -130,6 +158,7 @@ export default class ToDoListsView {
     });
   }
   _renderHeader() {
+    this.header.innerHTML = "";
     const lessthenBtn = document.createElement("img");
     lessthenBtn.src = lessthan;
     lessthenBtn.id = "lessthan";
@@ -143,28 +172,39 @@ export default class ToDoListsView {
     this.header.appendChild(imgDiv);
     this.header.appendChild(imgDiv);
   }
-  _renderSidebar() {
+  _renderSidebar(listIndex) {
+    this.sidebar.innerHTML = "";
     const appTitle = document.createElement("h1");
     appTitle.textContent = "To Do List";
     appTitle.id = "apptitle";
     this.sidebar.appendChild(appTitle);
     this.toDoLists.forEach((toDoList, index) => {
-      const sideBarItem = document.createElement("h2");
-      sideBarItem.textContent = toDoList.getName();
+      const sideBarItem = document.createElement("div");
+      const sideBarTitle = document.createElement("h2");
+      sideBarTitle.textContent = toDoList.getName();
       sideBarItem.className = "listname";
-      if (index == 0) {
+      sideBarItem.appendChild(sideBarTitle);
+      if (index == listIndex) {
         sideBarItem.classList.add("selected");
       }
       sideBarItem.addEventListener("click", () => {
-        const lists = document.querySelectorAll(".listname");
-        lists.forEach((list) => {
-          list.classList.remove("selected");
-        });
-        sideBarItem.classList.add("selected");
+        this._renderSidebar(index);
         this._renderList(index);
       });
       this.sidebar.appendChild(sideBarItem);
     });
+
+    const addListBtn = document.createElement("button");
+    addListBtn.textContent = "Add List";
+    addListBtn.className = "addListBtn";
+    addListBtn.addEventListener("click", () => {
+      const newList = createDefaultToDoList();
+      this.toDoLists.push(newList);
+      saveToDoListsToStorage(this.toDoLists);
+      this._renderSidebar(this.toDoLists.length - 1);
+      this._renderList(this.toDoLists.length - 1);
+    });
+    this.sidebar.appendChild(addListBtn);
   }
 }
 
