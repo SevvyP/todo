@@ -1,8 +1,7 @@
 // ToDo represents a single task that the user wants to complete
 export class ToDo {
-  constructor(title, description, dueDate, priority, notes, checked) {
+  constructor(title, dueDate, priority, notes, checked) {
     this.title = title;
-    this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
     this.notes = notes;
@@ -11,10 +10,6 @@ export class ToDo {
 
   getTitle() {
     return this.title;
-  }
-
-  getDescription() {
-    return this.description;
   }
 
   getDueDate() {
@@ -35,10 +30,6 @@ export class ToDo {
 
   setTitle(title) {
     this.title = title;
-  }
-
-  setDescription(description) {
-    this.description = description;
   }
 
   setDueDate(dueDate) {
@@ -88,14 +79,7 @@ export class ToDoList {
 
 // createDefaultTodo creates a default ToDo object with default values
 export function createDefaultTodo() {
-  return new ToDo(
-    "Title",
-    "Description",
-    "Due Date",
-    "Priority",
-    "Notes",
-    false
-  );
+  return new ToDo("Title", "Due Date", "Priority", "Add a note", false);
 }
 
 // createDefaultToDoList creates a default ToDoList object with default values

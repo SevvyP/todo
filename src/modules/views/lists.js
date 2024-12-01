@@ -6,10 +6,10 @@ import {
 } from "../models/todo";
 import lessthan from "../../assets/lessthan.svg";
 import burger from "../../assets/burger.svg";
-import edit from "../../assets/edit.svg";
+import expand from "../../assets/expand.svg";
 import calendar from "../../assets/calendar.svg";
 
-export class ToDoListsView {
+export default class ToDoListsView {
   constructor() {
     // get todolists from local storage if they exist
     this.toDoLists = getToDoListsFromStorage();
@@ -43,6 +43,8 @@ export class ToDoListsView {
     this.toDoLists[index].getToDoList().forEach((toDo, index2) => {
       const toDoElement = document.createElement("div");
       toDoElement.className = "toDoListItem";
+      const toDoHeaderElement = document.createElement("div");
+      toDoHeaderElement.className = "toDoListItemHeader";
 
       const checkboxElement = document.createElement("input");
       checkboxElement.type = "checkbox";
@@ -50,15 +52,23 @@ export class ToDoListsView {
       checkboxElement.addEventListener("change", () => {
         toDo.setChecked(!toDo.getChecked());
         saveToDoListsToStorage(this.toDoLists);
-        this._renderList(index);
       });
       checkboxElement.className = "checked";
-      toDoElement.appendChild(checkboxElement);
+      toDoHeaderElement.appendChild(checkboxElement);
 
       const titleElement = document.createElement("h2");
       titleElement.textContent = toDo.getTitle();
       titleElement.className = "title";
-      toDoElement.appendChild(titleElement);
+      titleElement.contentEditable = true;
+      titleElement.spellcheck = false;
+      titleElement.addEventListener("input", () => {
+        if (titleElement.textContent === "") {
+          titleElement.textContent = "Title";
+        }
+        toDo.setTitle(titleElement.textContent);
+        saveToDoListsToStorage(this.toDoLists);
+      });
+      toDoHeaderElement.appendChild(titleElement);
 
       const dueDateElement = document.createElement("div");
       const dueDateText = document.createElement("p");
@@ -68,46 +78,53 @@ export class ToDoListsView {
       dueDateImg.src = calendar;
       dueDateElement.appendChild(dueDateImg);
       dueDateElement.appendChild(dueDateText);
-      toDoElement.appendChild(dueDateElement);
+      toDoHeaderElement.appendChild(dueDateElement);
 
       const priorityElement = document.createElement("p");
       priorityElement.textContent = `${toDo.getPriority()}`;
       priorityElement.className = "priority";
-      toDoElement.appendChild(priorityElement);
+      toDoHeaderElement.appendChild(priorityElement);
 
-      //   const removeButtonElement = document.createElement("button");
-      //   removeButtonElement.textContent = "Remove";
-      //   removeButtonElement.addEventListener("click", () => {
-      //     this.toDoLists[index].removeToDo(index2);
-      //     saveToDoListsToStorage(this.toDoLists);
-      //     this._renderList(index);
-      //   });
-      //   removeButtonElement.className = "removetodo";
-      //   toDoElement.appendChild(removeButtonElement);
+      const expandContainer = document.createElement("div");
+      const notesElement = document.createElement("p");
+      notesElement.className = "notes";
+      notesElement.textContent = `${toDo.getNotes()}`;
+      notesElement.contentEditable = true;
+      notesElement.spellcheck = false;
+      notesElement.addEventListener("input", () => {
+        if (notesElement.textContent === "") {
+          notesElement.textContent = "Add a note";
+        }
+        toDo.setNotes(notesElement.textContent);
+        saveToDoListsToStorage(this.toDoLists);
+      });
+      expandContainer.appendChild(notesElement);
 
-      const editImg = document.createElement("img");
-      editImg.src = edit;
-      editImg.className = "edit";
-      editImg.addEventListener("click", () => {
-        const title = prompt("Title", toDo.getTitle());
-        const description = prompt("Description", toDo.getDescription());
-        const dueDate = prompt("Due Date", toDo.getDueDate());
-        const priority = prompt("Priority", toDo.getPriority());
-        const notes = prompt("Notes", toDo.getNotes());
-        toDo.setTitle(title);
-        toDo.setDescription(description);
-        toDo.setDueDate(dueDate);
-        toDo.setPriority(priority);
-        toDo.setNotes(notes);
+      const removeButtonElement = document.createElement("button");
+      removeButtonElement.textContent = "Remove";
+      removeButtonElement.addEventListener("click", () => {
+        this.toDoLists[index].removeToDo(index2);
         saveToDoListsToStorage(this.toDoLists);
         this._renderList(index);
       });
-      toDoElement.appendChild(editImg);
+      removeButtonElement.className = "removetodo";
+      removeButtonElement.classList.toggle("hidden");
+      expandContainer.appendChild(removeButtonElement);
 
-      const notesElement = document.createElement("p");
-      notesElement.textContent = `${toDo.getNotes()}`;
-      notesElement.className = "notes";
-      toDoElement.appendChild(notesElement);
+      // expand notes, toggle visibility of edit and remove
+      const expandElement = document.createElement("img");
+      expandElement.className = "expand";
+      expandElement.src = expand;
+      expandElement.addEventListener("click", () => {
+        toDoElement.classList.toggle("expanded");
+        expandElement.classList.toggle("expanded");
+        notesElement.classList.toggle("expanded");
+        removeButtonElement.classList.toggle("hidden");
+      });
+      toDoHeaderElement.appendChild(expandElement);
+
+      toDoElement.appendChild(toDoHeaderElement);
+      toDoElement.appendChild(expandContainer);
 
       this.toDoList.appendChild(toDoElement);
     });
@@ -160,7 +177,6 @@ function getToDoListsFromStorage() {
       toDoList.toDoList.forEach((toDo) => {
         const newToDo = new ToDo(
           toDo.title,
-          toDo.description,
           toDo.dueDate,
           toDo.priority,
           toDo.notes,

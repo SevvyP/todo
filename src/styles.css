@@ -9,12 +9,14 @@ body {
 }
 
 #content {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
 #list {
+  min-width: 0;
   display: flex;
   flex-direction: row;
   height: 100%;
@@ -37,6 +39,9 @@ body {
 
 #lessthan {
   max-height: 80%;
+}
+#lessthan:hover {
+  cursor: pointer;
 }
 
 #sidebar {
@@ -82,59 +87,81 @@ body {
 }
 
 #toDoList {
+  min-width: 0;
+  width: 90%;
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
 .toDoListItem {
+  min-width: 0;
+  width: 100%;
   height: 100px;
   padding: 10px;
-  width: 90%;
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid #000;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+}
+.toDoListItem.expanded {
+  height: auto;
+}
+
+.toDoListItemHeader {
+  margin: 0;
+  justify-content: space-between;
+  min-height: 70px;
+  max-height: 70px;
+  display: flex;
 }
 
 .checked {
-  grid-area: 4 / 1 / 7 / 3;
+  width: 30px;
 }
+
 .title {
-  grid-area: 1 / 3 / 4 / 6;
+  flex: 0 0 30%;
 }
+
 .duedate {
+  height: 40px;
   display: flex;
-  grid-area: 1 / 7 / 4 / 9;
 }
-.priority {
-  grid-area: 1 / 9 / 4 / 10;
+
+.expand {
+  height: 40px;
+  width: 40px;
+  transition: 0.3s ease;
 }
-.removetodo {
-  grid-area: 1 / 10 / 4 / 11;
+.expand:hover {
+  cursor: pointer;
 }
-.edit {
-  grid-area: 1 / 10 / 4 / 11;
+.expand.expanded {
+  rotate: -90deg;
 }
+
 .notes {
-  grid-area: 6 / 3 / 9 / 11;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes.expanded {
+  white-space: normal;
+  overflow: visible;
+}
+
+.edittodo.hidden {
+  display: none;
+}
+
+.removetodo.hidden {
+  display: none;
 }
 
 #add {
   margin-right: 20px;
+  margin-left: 20px;
 }
 
-/* responsive sidebar code when screen is 900px wide
-@media screen and (max-width: 900px) {
-  #sidebar {
-    width: 0;
-  }
-  #sidebar.hidden {
-    width: 0;
-  }
-  #sidebar.hidden > h2.listname.selected {
-    padding: 0;
-  }
-} */
+.addBtn:hover {
+  cursor: pointer;
+}
