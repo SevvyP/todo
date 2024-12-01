@@ -1,5 +1,8 @@
+@import "~js-datepicker/dist/datepicker.min.css";
+
 body {
   margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #container {
@@ -143,8 +146,18 @@ body {
 }
 
 .duedate {
+  width: 20%;
   height: 40px;
   display: flex;
+}
+
+.priority {
+  width: 10%;
+  height: 40px;
+}
+
+.duedate > img:hover {
+  cursor: pointer;
 }
 
 .expand {

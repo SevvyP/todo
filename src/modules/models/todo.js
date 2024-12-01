@@ -79,7 +79,7 @@ export class ToDoList {
 
 // createDefaultTodo creates a default ToDo object with default values
 export function createDefaultTodo() {
-  return new ToDo("Title", "Due Date", "Priority", "Add a note", false);
+  return new ToDo("Title", "Choose a Date", "Low", "Add a note", false);
 }
 
 // createDefaultToDoList creates a default ToDoList object with default values

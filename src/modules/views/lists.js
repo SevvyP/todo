@@ -4,9 +4,9 @@ import {
   createDefaultToDoList,
   createDefaultTodo,
 } from "../models/todo";
+import datepicker from "js-datepicker";
 import lessthan from "../../assets/lessthan.svg";
 import burger from "../../assets/burger.svg";
-import edit from "../../assets/edit.svg";
 import expand from "../../assets/expand.svg";
 import calendar from "../../assets/calendar.svg";
 
@@ -108,8 +108,19 @@ export default class ToDoListsView {
       dueDateElement.appendChild(dueDateText);
       toDoHeaderElement.appendChild(dueDateElement);
 
-      const priorityElement = document.createElement("p");
-      priorityElement.textContent = `${toDo.getPriority()}`;
+      const priorityElement = document.createElement("select");
+      const priorityOptions = ["Low", "Medium", "High"];
+      priorityOptions.forEach((option) => {
+        const optionElement = document.createElement("option");
+        optionElement.value = option;
+        optionElement.textContent = option;
+        priorityElement.appendChild(optionElement);
+      });
+      priorityElement.value = toDo.getPriority();
+      priorityElement.addEventListener("change", () => {
+        toDo.setPriority(priorityElement.value);
+        saveToDoListsToStorage(this.toDoLists);
+      });
       priorityElement.className = "priority";
       toDoHeaderElement.appendChild(priorityElement);
 
@@ -155,6 +166,15 @@ export default class ToDoListsView {
       toDoElement.appendChild(expandContainer);
 
       this.toDoList.appendChild(toDoElement);
+
+      // datepicker
+      datepicker(dueDateImg, {
+        onSelect: (_, date) => {
+          toDo.setDueDate(date.toDateString());
+          saveToDoListsToStorage(this.toDoLists);
+          dueDateText.textContent = date.toDateString();
+        },
+      });
     });
   }
   _renderHeader() {
